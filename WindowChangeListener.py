@@ -6,9 +6,6 @@ import win32api
 import win32con
 import win32process
 
-from main import handleWindowChange
-
-
 class WindowChangeListener:
 
     def __init__(self,handleWindowChange):
@@ -52,7 +49,7 @@ class WindowChangeListener:
             handle = win32api.OpenProcess(win32con.PROCESS_QUERY_INFORMATION | win32con.PROCESS_VM_READ, 0, pid)
             # exePath = win32process.GetModuleFileNameEx(handle, 0)
             head, exePath = os.path.split(win32process.GetModuleFileNameEx(handle, 0))
-            handleWindowChange(exePath)
+            self.handleWindowChange(exePath)
 
         WinEventProc = WinEventProcType(callback)
 

@@ -8,10 +8,22 @@ class GUI:
   def __init__(self):
     sg.theme('LightGrey1')
     psg.theme('LightGrey1')
+    self.connected = False;
 
     # simple tray icon and menu
-    menu_def = ['BLANK', ['&Settings', '---', 'E&xit']]
-    self.tray = sg.SystemTray(menu=menu_def, filename=r'default_icon.ico')
+    self.menu_def = ['BLANK', ['!Disconnected', '&Settings', '---', 'E&xit']]
+    self.tray = sg.SystemTray(menu=self.menu_def, filename=r'default_icon.ico')
+
+  def setConnected(self):
+    self.connected=True;
+    self.menu_def = ['BLANK', ['!Connected', '&Settings', '---', 'E&xit']]
+    self.tray.update(menu=self.menu_def)
+
+  def setDisconnected(self):
+    self.connected = False;
+    self.menu_def = ['BLANK', ['!Disconnected', '&Settings', '---', 'E&xit']]
+    self.tray.update(menu=self.menu_def)
+
 
   def work(self,config):
     # Event Loop to process "events"
@@ -20,13 +32,15 @@ class GUI:
       print(menu_item)
       if menu_item == 'Exit':
         self.tray.close()
+        self.exitCallback()
         break
       elif menu_item == 'Settings':
         self.settingsWindow(config)
         config.reLoadConfig()
+
         print("settings done")
 
-  def settingsWindow(self,config):
+  def settingsWindow(self, config):
     # All the stuff inside your window.
     # settingsLayout = [
     #   [sg.Text('First setting'), sg.InputText(key='first', default_text=config['first'])],
@@ -72,3 +86,6 @@ class GUI:
             loop = False
             config.saveConfig(newConfig)
             settingsWindow.close()
+
+  def setExitCallback(self, exitCallback):
+      self.exitCallback = exitCallback

@@ -1,3 +1,5 @@
+import threading
+
 from Config import Config
 from GUI import GUI
 from WindowChangeListener import WindowChangeListener
@@ -33,8 +35,6 @@ def handleWindowChange(exePath):
 def tryUsingPort(port):
     try:
         if device.connect(port):
-            gui.work(config)
-            device.disconnect()
             return True
     except SerialException as e:
         print("Serial error: ", e)
@@ -48,20 +48,52 @@ def tryUsingPort(port):
     return False
 
 
+def endEverything():
+    # disconnect the device (without triggering callbacks)
+    device.disconnect(True)
+
+def connectToDevice():
+    def doConnect():
+        connected = False
+        print("CTD called")
+        while connected == False:
+            print("CTD loop")
+            for port in serial.tools.list_ports.comports():  # Iterate over all serial ports
+                if port.vid != VID or port.pid != PID:
+                    continue  # Skip if vendor or product ID do not match
+                if tryUsingPort(port.device):  # Try connecting to this device
+                    connected=True
+                    gui.setConnected()
+                    print("CTD connected")
+                    connecting=False
+                    break  # Connection was successful and inkkeys was found. If we reach this point, we do not need to search on
+                    # another port. We got disconnected or some other kind of error, so skip the rest of the port list and start
+                    # over.
+            time.sleep(5)
+
+    t = threading.Thread(target=doConnect)
+    #t.setDaemon(True)
+    t.start()
+
+
+def disconnected():
+    if gui.connected:
+        gui.setDisconnected()
+        connectToDevice()
+
 #### main
 config = Config("./config.json")
 gui = GUI()
+gui.setExitCallback(endEverything)
 winListener = WindowChangeListener(handleWindowChange)
 winListener.runThreaded()
 
 # Instantiate the device
 device = Device()
 device.debug = DEBUG
+device.setDisconnectionCallback(disconnected)
 
-for port in serial.tools.list_ports.comports():  # Iterate over all serial ports
-    if port.vid != VID or port.pid != PID:
-        continue  # Skip if vendor or product ID do not match
-    if tryUsingPort(port.device):  # Try connecting to this device
-        break  # Connection was successful and inkkeys was found. If we reach this point, we do not need to search on
-        # another port. We got disconnected or some other kind of error, so skip the rest of the port list and start
-        # over.
+connecting = False
+connectToDevice() # runs in another thread
+
+gui.work(config) # blocks

@@ -40,15 +40,28 @@ class Device:
         print("Connected to ", self.ser.name, ".")
         return True
 
-    def disconnect(self):
+    def setDisconnectionCallback(self, disconnectionCallback):
+        self.disconnectionCallback = disconnectionCallback
+
+    def disconnect(self, noCallback=False):
         if self.ser != None:
             self.ser.close()
             self.ser = None
+            if not noCallback:
+                self.disconnectionCallback()
+
 
     def sendToDevice(self, command):
         if self.debug:
             print("Sending: " + command)
-        self.ser.write((command + "\n").encode())
+        if self.ser != None:
+            try:
+                self.ser.write((command + "\n").encode())
+            except serial.SerialException as e:
+                self.disconnect()
+        else:
+            self.disconnect()
+
 
     def sendBinaryToDevice(self, data):
         if self.debug:
