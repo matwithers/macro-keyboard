@@ -12,6 +12,7 @@ import pprint
 from serial import SerialException  # Serial functions
 import serial.tools.list_ports  # Function to iterate over serial ports
 import traceback  # Print tracebacks if an error is thrown and caught
+import sys
 
 VID = 0x1b4f  # USB Vendor ID for a Pro Micro
 PID = 0x9206  # USB Product ID for a Pro Micro

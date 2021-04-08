@@ -1,3 +1,4 @@
+from inkkeys import *
 from PIL import Image, ImageDraw, ImageFont
 
 class ModeApplication:
@@ -8,6 +9,9 @@ class ModeApplication:
 
     #Button2 (top left)
     device.sendIconFor(2, "icons/" + appConfig['button1']['icon'])
+    device.assignKey(KeyCode.SW2_PRESS, [KeyCode.from_char(appConfig['button1']['data'])])
+
+    # KeyCode.from_char('e')
     #device.assignKey(KeyCode.SW2_PRESS, [event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_ALT, ActionCode.PRESS), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_B), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_ALT, ActionCode.RELEASE), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_Z)]) #Cut to selection (this shortcut appears to be language dependent, so you will probably need to change it)
     #device.assignKey(KeyCode.SW2_RELEASE, [])
 

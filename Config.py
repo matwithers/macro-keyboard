@@ -17,8 +17,8 @@ class Config:
       config = self.initConfig()
       self.saveConfig(config)
     print("Config loaded . . .")
-    pprint.pprint(config)
-    print("-------------------")
+    #pprint.pprint(config)
+    #print("-------------------")
     return config
 
   def __initConfig(self):
@@ -28,16 +28,16 @@ class Config:
       'third': True
     }
     print("Config initialized . . .")
-    pprint.pprint(newConfig)
-    print("-------------------")
+    #pprint.pprint(newConfig)
+    #print("-------------------")
     return newConfig
 
-  def saveConfig(self,newConfig):
+  def saveConfig(self):
     with open(self.config_file, 'w') as json_file:
-      json.dump(newConfig, json_file)
+      json.dump(self.config, json_file)
     print ("Config saved . . .")
-    pprint.pprint(newConfig)
-    print("-------------------")
+    #pprint.pprint(newConfig)
+    #print("-------------------")
     return
 
   def reLoadConfig(self):
