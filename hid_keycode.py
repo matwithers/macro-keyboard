@@ -257,7 +257,10 @@ class HIDKeyCode:
         }
 
     def getKeyCode(self, key):
-        return self.keycode_hash[key]
+        return_value = False
+        if key in self.keycode_hash:
+            return_value = self.keycode_hash[key]
+        return return_value
 
     def buildKeyStrokes(self, key_string):
         key_events = []
