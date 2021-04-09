@@ -3,6 +3,7 @@ import serial
 import time
 from threading import Lock
 from PIL import Image, ImageDraw, ImageOps, ImageFont
+from Config import Config
 
 class Device:
     ser = None

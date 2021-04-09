@@ -1,5 +1,7 @@
 from inkkeys import *
 from PIL import Image, ImageDraw, ImageFont
+from hid_keycode import HIDKeyCode
+import pprint
 
 class ModeApplication:
   jogFunction = ""    #Keeps track of the currently selected function of the jog dial
@@ -7,48 +9,55 @@ class ModeApplication:
   def activate(self, device, exeName, appConfig):
     device.sendTextFor("title", exeName, inverted=True)  #Title
 
+    hidkeycode = HIDKeyCode()
+
     #Button2 (top left)
     device.sendIconFor(2, "icons/" + appConfig['button1']['icon'])
-    #device.assignKey(KeyCode.SW2_PRESS, [])
-
-    # KeyCode.from_char('e')
-    #device.assignKey(KeyCode.SW2_PRESS, [event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_ALT, ActionCode.PRESS), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_B), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_ALT, ActionCode.RELEASE), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_Z)]) #Cut to selection (this shortcut appears to be language dependent, so you will probably need to change it)
-    #device.assignKey(KeyCode.SW2_RELEASE, [])
+    key_events = hidkeycode.buildKeyStrokes(appConfig['button1']['data'])
+    device.assignKey(KeyCode.SW2_PRESS, key_events)
+    device.assignKey(KeyCode.SW2_RELEASE, [])
 
     #Button3 (left, second from top)
     device.sendIconFor(3, "icons/" + appConfig['button2']['icon'])
-    #device.assignKey(KeyCode.SW3_PRESS, [event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_ALT, ActionCode.PRESS), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_B), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_ALT, ActionCode.RELEASE), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_I)]) #Cut to content (this shortcut appears to be language dependent, so you will probably need to change it)
-    #device.assignKey(KeyCode.SW3_RELEASE, [])
+    key_events = hidkeycode.buildKeyStrokes(appConfig['button2']['data'])
+    device.assignKey(KeyCode.SW3_PRESS, key_events)
+    device.assignKey(KeyCode.SW3_RELEASE, [])
 
     #Button4 (left, third from top)
     device.sendIconFor(4, "icons/" + appConfig['button3']['icon'])
-    #device.assignKey(KeyCode.SW4_PRESS, [event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_ALT, ActionCode.PRESS), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_B), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_ALT, ActionCode.RELEASE), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_L)]) #Canvas size (this shortcut appears to be language
-    #device.assignKey(KeyCode.SW4_RELEASE, [])
+    key_events = hidkeycode.buildKeyStrokes(appConfig['button3']['data'])
+    device.assignKey(KeyCode.SW4_PRESS, key_events)
+    device.assignKey(KeyCode.SW4_RELEASE, [])
 
     #Button5 (bottom left)
     device.sendIconFor(5, "icons/" + appConfig['button4']['icon'])
-    #device.assignKey(KeyCode.SW5_PRESS, [event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_ALT, ActionCode.PRESS), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_B), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_ALT, ActionCode.RELEASE), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_S)]) #Resize (this shortcut appears to be language
-    #device.assignKey(KeyCode.SW5_RELEASE, [])
+    key_events = hidkeycode.buildKeyStrokes(appConfig['button4']['data'])
+    device.assignKey(KeyCode.SW5_PRESS, key_events)
+    device.assignKey(KeyCode.SW5_RELEASE, [])
 
     #Button6 (top right)
     device.sendIconFor(6, "icons/" + appConfig['button5']['icon'])
-    #device.assignKey(KeyCode.SW6_PRESS, [event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_CTRL, ActionCode.PRESS), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_SHIFT, ActionCode.PRESS), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_V), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_CTRL, ActionCode.RELEASE), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_SHIFT, ActionCode.RELEASE)]) #Paste as new image
-    #device.assignKey(KeyCode.SW6_RELEASE, [])
+    key_events = hidkeycode.buildKeyStrokes(appConfig['button4']['data'])
+    device.assignKey(KeyCode.SW6_PRESS, key_events)
+    device.assignKey(KeyCode.SW6_RELEASE, [])
 
     #Button7 (right, second from top)
     device.sendIconFor(7, "icons/" + appConfig['button6']['icon'])
-    #device.assignKey(KeyCode.SW7_PRESS, [event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_CTRL, ActionCode.PRESS), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_SHIFT, ActionCode.PRESS), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_N), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_CTRL, ActionCode.RELEASE), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_SHIFT, ActionCode.RELEASE)]) #New layer
-    #device.assignKey(KeyCode.SW7_RELEASE, [])
+    key_events = hidkeycode.buildKeyStrokes(appConfig['button6']['data'])
+    device.assignKey(KeyCode.SW7_PRESS, key_events)
+    device.assignKey(KeyCode.SW7_RELEASE, [])
 
     #Button8 (right, third from top)
     device.sendIconFor(8, "icons/" + appConfig['button7']['icon'])
-    #device.assignKey(KeyCode.SW8_PRESS, [event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_CTRL, ActionCode.PRESS), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_SHIFT, ActionCode.PRESS), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_J), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_CTRL, ActionCode.RELEASE), event(DeviceCode.KEYBOARD, KeyboardKeycode.KEY_LEFT_SHIFT, ActionCode.RELEASE)]) #Zom to fill screen
-    #device.assignKey(KeyCode.SW8_RELEASE, [])
+    key_events = hidkeycode.buildKeyStrokes(appConfig['button7']['data'])
+    device.assignKey(KeyCode.SW8_PRESS, key_events)
+    device.assignKey(KeyCode.SW8_RELEASE, [])
 
     #Button9 (bottom right)
-    device.sendIconFor(9, "icons/" + appConfig['button1']['icon'])
-    #device.assignKey(KeyCode.SW9_PRESS, []) #Not used, set to nothing.
-    #device.assignKey(KeyCode.SW9_RELEASE, [])
+    device.sendIconFor(9, "icons/" + appConfig['button8']['icon'])
+    key_events = hidkeycode.buildKeyStrokes(appConfig['button8']['data'])
+    device.assignKey(KeyCode.SW9_PRESS, key_events)
+    device.assignKey(KeyCode.SW9_RELEASE, [])
 
     self.jogFunction = ""
 
